@@ -1,4 +1,4 @@
-package tech.jhipster.beer.security.oauth2;
+package tech.jhipster.beer.security.oauth2.infrastructure.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

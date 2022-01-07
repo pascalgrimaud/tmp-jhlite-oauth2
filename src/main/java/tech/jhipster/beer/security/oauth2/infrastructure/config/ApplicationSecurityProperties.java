@@ -1,4 +1,4 @@
-package tech.jhipster.beer.security.oauth2;
+package tech.jhipster.beer.security.oauth2.infrastructure.config;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,7 +14,6 @@ public class ApplicationSecurityProperties {
   private String contentSecurityPolicy = ApplicationSecurityDefaults.CONTENT_SECURITY_POLICY;
 
   private final Authentication authentication = new Authentication();
-
 
   public Authentication getAuthentication() {
     return authentication;
@@ -32,22 +31,21 @@ public class ApplicationSecurityProperties {
 
     private final OAuth2 oauth2 = new OAuth2();
 
-  public Authentication.OAuth2 getOauth2() {
-            return oauth2;
-        }
+    public Authentication.OAuth2 getOauth2() {
+      return oauth2;
+    }
 
     public static class OAuth2 {
-            private List<String> audience = new ArrayList<>();
 
-            public List<String> getAudience() {
-                return Collections.unmodifiableList(audience);
-            }
+      private List<String> audience = new ArrayList<>();
 
-            public void setAudience(@NotNull List<String> audience) {
-                this.audience.addAll(audience);
-            }
-        }
+      public List<String> getAudience() {
+        return Collections.unmodifiableList(audience);
+      }
 
-
+      public void setAudience(@NotNull List<String> audience) {
+        this.audience.addAll(audience);
+      }
+    }
   }
 }

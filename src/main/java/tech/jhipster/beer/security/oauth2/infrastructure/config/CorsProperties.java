@@ -1,4 +1,4 @@
-package tech.jhipster.beer.security.oauth2;
+package tech.jhipster.beer.security.oauth2.infrastructure.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;

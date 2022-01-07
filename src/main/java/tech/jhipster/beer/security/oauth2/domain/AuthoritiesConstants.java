@@ -1,4 +1,4 @@
-package tech.jhipster.beer.security.oauth2;
+package tech.jhipster.beer.security.oauth2.domain;
 
 /**
  * Constants for Spring Security authorities.
