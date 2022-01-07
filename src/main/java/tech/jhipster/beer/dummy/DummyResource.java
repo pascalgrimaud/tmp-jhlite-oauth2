@@ -10,6 +10,6 @@ public class DummyResource {
 
   @GetMapping
   public String getDummy() {
-    return "hello world!";
+    return "I love chips";
   }
 }
