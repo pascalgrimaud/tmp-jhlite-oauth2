@@ -32,7 +32,6 @@ import tech.jhipster.beer.IntegrationTest;
  */
 @IntegrationTest
 @AutoConfigureMockMvc
-@Import(ExceptionTranslatorTestConfiguration.class)
 @WithMockUser
 class ExceptionTranslatorIT {
 
