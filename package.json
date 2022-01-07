@@ -1,0 +1,26 @@
+{
+  "name": "beer",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Beer Project",
+  "license": "UNLICENSED",
+  "scripts": {
+    "prepare": "husky install",
+    "prettier:check": "prettier --check \"{,src/**/}*.{md,json,yml,html,js,ts,tsx,css,scss,vue,java,xml}\"",
+    "prettier:format": "prettier --write \"{,src/**/}*.{md,json,yml,html,js,ts,tsx,css,scss,vue,java,xml}\""
+  },
+  "devDependencies": {
+    "@prettier/plugin-xml": "1.2.0",
+    "husky": "7.0.4",
+    "lint-staged": "12.1.5",
+    "prettier": "2.5.1",
+    "prettier-plugin-java": "1.6.0",
+    "prettier-plugin-packagejson": "2.2.15"
+  },
+  "engines": {
+    "node": ">=16.13.0"
+  },
+  "cacheDirectories": [
+    "node_modules"
+  ]
+}
