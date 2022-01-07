@@ -142,9 +142,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   JwtDecoder jwtDecoder(ClientRegistrationRepository clientRegistrationRepository, RestTemplateBuilder restTemplateBuilder) {
     NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromOidcIssuerLocation(issuerUri);
 
-    OAuth2TokenValidator<Jwt> audienceValidator = new AudienceValidator(
-      applicationSecurityProperties.getAuthentication().getOauth2().getAudience()
-    );
+    OAuth2TokenValidator<Jwt> audienceValidator = new AudienceValidator(applicationSecurityProperties.getOauth2().getAudience());
     OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuerUri);
     OAuth2TokenValidator<Jwt> withAudience = new DelegatingOAuth2TokenValidator<>(withIssuer, audienceValidator);
 
