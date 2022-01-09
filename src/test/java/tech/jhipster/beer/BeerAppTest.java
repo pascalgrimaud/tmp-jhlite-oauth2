@@ -1,21 +1,40 @@
 package tech.jhipster.beer;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.mockito.Mockito.when;
 import static tech.jhipster.beer.BeerApp.LF;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@IntegrationTest
-class BeerAppIT {
+@UnitTest
+@ExtendWith(SpringExtension.class)
+class BeerAppTest {
+
+  @Mock
+  ConfigurableApplicationContext applicationContext;
+
+  @Mock
+  ConfigurableEnvironment environment;
 
   @Test
   void shouldMain() {
-    assertThatThrownBy(() -> BeerApp.main(new String[] {})).isExactlyInstanceOf(BeanCreationException.class);
+    try (MockedStatic<SpringApplication> springApplication = Mockito.mockStatic(SpringApplication.class)) {
+      when(applicationContext.getEnvironment()).thenReturn(environment);
+      springApplication.when(() -> SpringApplication.run(BeerApp.class, new String[] {})).thenReturn(applicationContext);
+
+      assertThatCode(() -> BeerApp.main(new String[] {})).doesNotThrowAnyException();
+    }
   }
 
   @Test

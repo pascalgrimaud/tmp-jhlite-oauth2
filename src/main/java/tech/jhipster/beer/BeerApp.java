@@ -20,8 +20,7 @@ public class BeerApp {
   protected static final String LF = "\n";
 
   public static void main(String[] args) {
-    SpringApplication app = new SpringApplication(BeerApp.class);
-    Environment env = app.run(args).getEnvironment();
+    Environment env = SpringApplication.run(BeerApp.class, args).getEnvironment();
     logApplicationStartup(env);
   }
 
