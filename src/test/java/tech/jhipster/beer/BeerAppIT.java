@@ -1,7 +1,6 @@
 package tech.jhipster.beer;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.*;
 import static tech.jhipster.beer.BeerApp.LF;
 
 import java.net.InetAddress;
@@ -9,13 +8,14 @@ import java.net.UnknownHostException;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.BeanCreationException;
 
 @IntegrationTest
 class BeerAppIT {
 
   @Test
   void shouldMain() {
-    assertThatCode(() -> BeerApp.main(new String[] {})).doesNotThrowAnyException();
+    assertThatThrownBy(() -> BeerApp.main(new String[] {})).isExactlyInstanceOf(BeanCreationException.class);
   }
 
   @Test

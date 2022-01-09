@@ -1,0 +1,39 @@
+package tech.jhipster.beer.security.oauth2.infrastructure.config;
+
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames.ID_TOKEN;
+
+import java.time.Instant;
+import java.util.*;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
+import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
+import tech.jhipster.beer.IntegrationTest;
+import tech.jhipster.beer.security.oauth2.domain.AuthoritiesConstants;
+
+@IntegrationTest
+class SecurityConfigurationIT {
+
+  @Autowired
+  GrantedAuthoritiesMapper grantedAuthoritiesMapper;
+
+  @Test
+  void shouldUserAuthoritiesMapper() {
+    Map<String, Object> claims = new HashMap<>();
+    claims.put("groups", List.of(AuthoritiesConstants.USER));
+    claims.put("sub", 123);
+    claims.put("preferred_username", "admin");
+    OidcIdToken idToken = new OidcIdToken(ID_TOKEN, Instant.now(), Instant.now().plusSeconds(60), claims);
+
+    OidcUserInfo userInfo = new OidcUserInfo(claims);
+
+    Collection<GrantedAuthority> authorities = new ArrayList<>();
+    authorities.add(new OidcUserAuthority(AuthoritiesConstants.USER, idToken, userInfo));
+
+    assertThatCode(() -> grantedAuthoritiesMapper.mapAuthorities(authorities)).doesNotThrowAnyException();
+  }
+}
