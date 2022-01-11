@@ -1,6 +1,7 @@
 package tech.jhipster.beer.technical.infrastructure.primary.exception;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -93,7 +94,7 @@ class ExceptionTranslatorIT {
   @Test
   void shouldHandleMethodArgumentNotValid() throws Exception {
     mockMvc
-      .perform(post("/api/exception-translator-test/method-argument").content("{}").contentType(MediaType.APPLICATION_JSON))
+      .perform(post("/api/exception-translator-test/method-argument").content("{}").contentType(MediaType.APPLICATION_JSON).with(csrf()))
       .andExpect(status().isBadRequest())
       .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
       .andExpect(jsonPath("$.message").value(ErrorConstants.ERR_VALIDATION))
