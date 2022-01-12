@@ -14,6 +14,9 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpEntity;
@@ -21,6 +24,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.AbstractRequestAttributes;
+import org.springframework.web.context.request.FacesRequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 import tech.jhipster.beer.IntegrationTest;
 import tech.jhipster.beer.security.oauth2.application.SecurityUtils;
 import tech.jhipster.beer.security.oauth2.domain.AuthoritiesConstants;
@@ -60,6 +66,33 @@ class CustomClaimConverterIT {
       )
     )
       .thenReturn(ResponseEntity.ok(userInfo));
+  }
+
+  @Test
+  void shouldConvertWithoutRequestAttributes() {
+    try (MockedStatic<RequestContextHolder> request = Mockito.mockStatic(RequestContextHolder.class)) {
+      request.when(RequestContextHolder::getRequestAttributes).thenReturn(null);
+
+      Map<String, Object> claims = new HashMap<>();
+      claims.put("sub", "123");
+      Map<String, Object> convertedClaims = customClaimConverter.convert(claims);
+
+      assertThat(convertedClaims).isNotEmpty().containsEntry("sub", "123");
+    }
+  }
+
+  @Test
+  void shouldConvertWithDifferentRequestAttributes() {
+    try (MockedStatic<RequestContextHolder> request = Mockito.mockStatic(RequestContextHolder.class)) {
+      FakeRequestAttributes attributes = new FakeRequestAttributes();
+      request.when(RequestContextHolder::getRequestAttributes).thenReturn(attributes);
+
+      Map<String, Object> claims = new HashMap<>();
+      claims.put("sub", "123");
+      Map<String, Object> convertedClaims = customClaimConverter.convert(claims);
+
+      assertThat(convertedClaims).isNotEmpty().containsEntry("sub", "123");
+    }
   }
 
   @Test
@@ -146,6 +179,24 @@ class CustomClaimConverterIT {
   }
 
   @Test
+  void shouldConvertWithBlankName() {
+    // GIVEN
+    Map<String, Object> claims = new HashMap<>();
+    claims.put("sub", "123");
+    // AND
+    ObjectNode user = mapper.createObjectNode();
+    user.put("preferred_username", USERNAME);
+    user.put("name", " ");
+    mockHttpGetUserInfo(user);
+
+    assertThatCode(() -> {
+        Map<String, Object> convertedClaims = customClaimConverter.convert(claims);
+        assertThat(convertedClaims).containsEntry("preferred_username", USERNAME).doesNotContainKeys("given_name", "family_name");
+      })
+      .doesNotThrowAnyException();
+  }
+
+  @Test
   void testConvert_withName() {
     // GIVEN
     Map<String, Object> claims = new HashMap<>();
@@ -202,6 +253,22 @@ class CustomClaimConverterIT {
     assertThatCode(() -> {
         Map<String, Object> convertedClaims = customClaimConverter.convert(claims);
         assertThat(convertedClaims).containsEntry("preferred_username", USERNAME).containsEntry("email", EMAIL);
+      })
+      .doesNotThrowAnyException();
+  }
+
+  @Test
+  void shouldConvertWithoutUser() {
+    // GIVEN
+    Map<String, Object> claims = new HashMap<>();
+    claims.put("sub", "123");
+    // AND
+    ObjectNode user = null;
+    mockHttpGetUserInfo(user);
+
+    assertThatCode(() -> {
+        Map<String, Object> convertedClaims = customClaimConverter.convert(claims);
+        assertThat(convertedClaims).doesNotContainKeys("preferred_username", "email");
       })
       .doesNotThrowAnyException();
   }

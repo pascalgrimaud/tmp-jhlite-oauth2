@@ -8,6 +8,7 @@ import java.util.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
@@ -22,7 +23,7 @@ class SecurityConfigurationIT {
   GrantedAuthoritiesMapper grantedAuthoritiesMapper;
 
   @Test
-  void shouldUserAuthoritiesMapper() {
+  void shouldUserAuthoritiesMapperWithOidcUserAuthority() {
     Map<String, Object> claims = new HashMap<>();
     claims.put("groups", List.of(AuthoritiesConstants.USER));
     claims.put("sub", 123);
@@ -33,6 +34,14 @@ class SecurityConfigurationIT {
 
     Collection<GrantedAuthority> authorities = new ArrayList<>();
     authorities.add(new OidcUserAuthority(AuthoritiesConstants.USER, idToken, userInfo));
+
+    assertThatCode(() -> grantedAuthoritiesMapper.mapAuthorities(authorities)).doesNotThrowAnyException();
+  }
+
+  @Test
+  void shouldUserAuthoritiesMapperWithSimpleGrantedAuthority() {
+    Collection<GrantedAuthority> authorities = new ArrayList<>();
+    authorities.add(new SimpleGrantedAuthority(AuthoritiesConstants.USER));
 
     assertThatCode(() -> grantedAuthoritiesMapper.mapAuthorities(authorities)).doesNotThrowAnyException();
   }

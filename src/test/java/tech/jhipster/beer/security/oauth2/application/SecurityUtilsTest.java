@@ -35,6 +35,11 @@ class SecurityUtilsTest {
   }
 
   @Test
+  void shouldNotGetAuthorities() {
+    assertThat(SecurityUtils.getAuthorities()).isEmpty();
+  }
+
+  @Test
   void shouldNotGetCurrentUserLoginForNull() {
     SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
     securityContext.setAuthentication(null);
@@ -233,7 +238,7 @@ class SecurityUtilsTest {
   }
 
   @Test
-  void testHasCurrentUserAnyOfAuthorities() {
+  void shouldHasCurrentUserAnyOfAuthorities() {
     SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
     Collection<GrantedAuthority> authorities = new ArrayList<>();
     authorities.add(new SimpleGrantedAuthority(AuthoritiesConstants.USER));
@@ -245,7 +250,14 @@ class SecurityUtilsTest {
   }
 
   @Test
-  void testHasCurrentUserNoneOfAuthorities() {
+  void shouldNotHaveCurrentUserAnyOfAuthoritiesForNull() {
+    SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
+
+    assertThat(SecurityUtils.hasCurrentUserAnyOfAuthorities(AuthoritiesConstants.USER, AuthoritiesConstants.ADMIN)).isFalse();
+  }
+
+  @Test
+  void shouldHasCurrentUserNoneOfAuthorities() {
     SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
     Collection<GrantedAuthority> authorities = new ArrayList<>();
     authorities.add(new SimpleGrantedAuthority(AuthoritiesConstants.USER));
