@@ -14,7 +14,6 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.request.AbstractRequestAttributes;
-import org.springframework.web.context.request.FacesRequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import tech.jhipster.beer.IntegrationTest;
 import tech.jhipster.beer.security.oauth2.application.SecurityUtils;
@@ -263,8 +260,7 @@ class CustomClaimConverterIT {
     Map<String, Object> claims = new HashMap<>();
     claims.put("sub", "123");
     // AND
-    ObjectNode user = null;
-    mockHttpGetUserInfo(user);
+    mockHttpGetUserInfo(null);
 
     assertThatCode(() -> {
         Map<String, Object> convertedClaims = customClaimConverter.convert(claims);
